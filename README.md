@@ -1,0 +1,2 @@
+# Blog 
+Esta es mi carta de presentacion hacia el mundo Tech, en este hablare un poco de mi trayectoria, mis conocimientos, los proyectos que he realizado y los que estoy realizando actualmente. Esto servira como un portafolio, para que mas personas les pueda servir en lo que he trabajado y los errores que he cometido, espero les sea de utilidad. 

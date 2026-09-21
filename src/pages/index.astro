@@ -1,93 +1,81 @@
 ---
+import Layout from '../layouts/Layout.astro';
 
+const projects = [
+  {
+    number: '01',
+    title: 'Tu primer proyecto',
+    description: 'Explica brevemente el problema, tu aportación y lo que aprendiste al construirlo.',
+    tags: ['Astro', 'HTML', 'CSS'],
+  },
+  {
+    number: '02',
+    title: 'Proyecto en construcción',
+    description: 'Un espacio para el siguiente reto que quieras convertir en una solución real.',
+    tags: ['JavaScript', 'Git'],
+  },
+];
+
+const posts = [
+  { category: 'Aprendizaje', title: 'Mi camino como desarrollador', date: 'Próximamente' },
+  { category: 'Proyectos', title: 'Notas de proyectos y decisiones técnicas', date: 'Próximamente' },
+  { category: 'Backend', title: 'Aprendizajes de la semana', date: 'Próximamente' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Angel Marco</title>
-	</head>
-	<body>
-
-    <div class="title-main">
-      <h1>Full - Stack <br>
-        <span class="red-important"> Developer </span>
-      </h1>
-      <p> I make solutions for the problems</p>
+<Layout title="Angel Marco | Portafolio y blog">
+  <section id="inicio" class="hero section" aria-labelledby="hero-title">
+    <p class="section-kicker">Hola, soy Angel Marco</p>
+    <h2 id="hero-title">Construyo en la web,<br /><em>aprendo en público.</em></h2>
+    <p class="hero-copy">Soy desarrollador en formación. Comparto proyectos, aprendizajes y el camino real de convertir ideas en soluciones.</p>
+    <div class="hero-actions">
+      <a class="button" href="#proyectos">Ver proyectos <span aria-hidden="true">↘</span></a>
+      <a class="button button--ghost" href="#blog">Leer el blog</a>
     </div>
+    <p class="hero-index" aria-hidden="true">01 / 04</p>
+  </section>
 
-    <div class = "about-me">
-      <p class="indice"> 01 </p>
-      <h2> Who is me? </h2>
-      <p> I'm just a simple developer trying to improve every day. <br>
-          I love make new program because i feel what i'm a <span class="red-important">GOD</span>  <br>
-          I hope to build something significant that contributes to society.
-      </p>
+  <section id="sobre-mi" class="section about" aria-labelledby="about-title">
+    <div class="section-heading">
+      <p class="section-kicker">Sobre mí</p>
+      <h2 id="about-title">Curiosidad, práctica y comunidad.</h2>
+      <p>Me estoy formando como desarrollador mientras documento lo que aprendo. Mi enfoque está en backend, nube y crear proyectos que resuelvan problemas reales.</p>
     </div>
-	
-    <div class="projects">
-        <p class="indice"> 02 </p>
-        <h2>
-          My <span class="red-important"> Projects </span>  
-        </h2>
-        <div class="cards-project">
-
-          <div class="info-projects">
-            <p> <span> Title of Project </span> </p>
-            <p> Puesto en el projecto</p>
-            <p> Area en la que se trabajo</p>
-          </div>
-
-
-          <div class="info-projects">
-            <p> <span> Title of Project </span> </p>
-            <p> Puesto en el projecto</p>
-            <p> Area en la que se trabajo</p>
-          </div>
-
-          <div class="info-projects">
-            <p> <span> Title of Project </span> </p>
-            <p> Descripcion del projecto </p>
-            <p> Tecnologias Utilizadas</p>
-          </div>
-
-
-        </div>
-
+    <div class="facts-grid">
+      <article><span>01</span><h3>Backend</h3><p>Node.js, APIs y bases de datos como base para aplicaciones útiles.</p></article>
+      <article><span>02</span><h3>Cloud</h3><p>Aprendizaje práctico para entender la infraestructura moderna.</p></article>
+      <article><span>03</span><h3>Construir en público</h3><p>Notas honestas para aprender, compartir y mejorar con cada proyecto.</p></article>
     </div>
+  </section>
 
-    <div class="Blogs">
-      <p> 03 </p>
-      <h2>
-        Blogs 
-      </h2>
-      <p> There are blogs builded for me </p>
-      <div class="blog-div">
-
-        <div class="card-blog">
-          <h4> Title </h4>
-          <p> Sinopsis del blog </p>
-          <button> Blog </button>
-        </div>
-
-        <div class="card-blog">
-          <h4> Title </h4>
-          <p> Sinopsis del blog </p>
-          <button> Blog </button>
-        </div>
-
-        <div class="card-blog">
-          <h4> Title </h4>
-          <p> Sinopsis del blog </p>
-          <button> Blog </button>
-        </div>
-
-      </div>
+  <section id="proyectos" class="section projects" aria-labelledby="projects-title">
+    <div class="section-heading">
+      <p class="section-kicker">Portafolio seleccionado</p>
+      <h2 id="projects-title">Aprendizaje convertido en proyectos.</h2>
     </div>
+    <div class="project-list">
+      {projects.map((project) => (
+        <article class="project-card">
+          <span class="project-number">{project.number}</span>
+          <div><h3>{project.title}</h3><p>{project.description}</p></div>
+          <ul aria-label={`Tecnologías de ${project.title}`}>{project.tags.map((tag) => <li>{tag}</li>)}</ul>
+        </article>
+      ))}
+    </div>
+  </section>
 
-	</body>
-</html>
+  <section id="blog" class="section blog-preview" aria-labelledby="blog-title">
+    <div class="section-heading section-heading--row">
+      <div><p class="section-kicker">Desde el blog</p><h2 id="blog-title">Notas del proceso.</h2></div>
+    </div>
+    <div class="post-grid">
+      {posts.map((post, index) => (
+        <article class="post-card">
+          <p>{post.category} <span>0{index + 1}</span></p>
+          <h3>{post.title}</h3>
+          <footer>{post.date}<span aria-hidden="true">↗</span></footer>
+        </article>
+      ))}
+    </div>
+  </section>
+</Layout>

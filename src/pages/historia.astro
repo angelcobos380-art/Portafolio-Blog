@@ -1,5 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <Layout
@@ -17,7 +21,7 @@ import Layout from '../layouts/Layout.astro';
 
       <p>Desde entonces busco esa sensación: construir un pequeño universo y dejarlo ordenado. Esa curiosidad guía lo que estudio y los sistemas que quiero aprender a diseñar.</p>
 
-      <a class="volver" href="/">← Volver a los proyectos</a>
+      <a class="volver" href={`${base}#proyectos`}>← Volver a los proyectos</a>
     </div>
   </section>
 </Layout>

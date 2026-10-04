@@ -26,6 +26,10 @@ const posts = [
   { title: 'Notas de proyectos', summary: 'Explicaciones breves sobre los problemas que resolví y las herramientas que utilicé.', tag: 'Próximamente' },
   { title: 'Aprendizajes de la semana', summary: 'Ideas y recursos que valen la pena guardar mientras sigo construyendo.', tag: 'Próximamente' },
 ];
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <Layout title="Angel Marco | Backend & Cloud Developer">
@@ -104,7 +108,7 @@ const posts = [
 
     <footer class="site-footer" id="contacto">
       <p>© {new Date().getFullYear()} Angel Marco. Hecho con curiosidad y Astro.</p>
-      <a href="#inicio">Volver arriba ↑</a>
+      <a href={`${base}#inicio`}>Volver arriba ↑</a>
     </footer>
   </div>
 </Layout>

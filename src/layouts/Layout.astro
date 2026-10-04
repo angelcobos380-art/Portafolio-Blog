@@ -12,6 +12,9 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.url);
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <!doctype html>
@@ -22,23 +25,23 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.url);
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonicalURL} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="icon" href={`${base}favicon.ico`} />
     <title>{title}</title>
   </head>
   <body>
     <aside class="sidebar" aria-label="Navegación principal">
-      <a class="brand" href="/" aria-label="Ir al inicio">AM<span>.</span></a>
+      <a class="brand" href={base} aria-label="Ir al inicio">AM<span>.</span></a>
       <div class="personal-info">
         <p class="eyebrow">Portafolio personal</p>
         <h1>Angel Marco<br />Martinez Cobos</h1>
         <p class="role">Backend & Cloud Developer</p>
       </div>
       <nav class="sidebar-nav">
-        <a href="/#inicio">Inicio</a>
-        <a href="/#proyectos">Proyectos</a>
-        <a href="/#blog">Blog</a>
-        <a class="history-link" href="/historia">Mi historia <span aria-hidden="true">→</span></a>
+        <a href={`${base}#inicio`}>Inicio</a>
+        <a href={`${base}#proyectos`}>Proyectos</a>
+        <a href={`${base}#blog`}>Blog</a>
+        <a class="history-link" href={`${base}historia`}>Mi historia <span aria-hidden="true">→</span></a>
       </nav>
     </aside>
     <main class="page-content"><slot /></main>

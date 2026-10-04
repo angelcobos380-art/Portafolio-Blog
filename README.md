@@ -1,4 +1,4 @@
-# 🚀 Angel Marco - Portafolio Personal & Blog
+# 👾 Angel Marco - Portafolio Personal & Blog
 
 Bienvenido al código fuente de mi portafolio personal y blog. Este espacio está diseñado para presentar mi perfil como **Backend & Cloud Developer**, documentar mis proyectos y compartir mis aprendizajes en el desarrollo de software.
 

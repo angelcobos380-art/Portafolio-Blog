@@ -25,6 +25,8 @@ jobs:
         uses: withastro/action@v3
         with:
           node-version: 22
+        env:
+          DEPLOY_TARGET: gh-pages
         # Por defecto corre: npm install, npm run build,
         # y sube el contenido de ./dist como el artifact de Pages.
 

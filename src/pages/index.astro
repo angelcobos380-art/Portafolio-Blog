@@ -1,17 +1,110 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
 
+const projects = [
+  {
+    title: 'Calculadora de gasto semanal',
+    web: 'https://calculadora-gasto-semanal.vercel.app',
+    description: 'Una aplicación para definir un presupuesto semanal y registrar gastos con una interfaz clara y directa.',
+    stack: ['JavaScript', 'HTML', 'CSS'],
+  },
+  {
+    title: 'RoadMath',
+    description: 'Aplicación móvil educativa que enseña cálculo diferencial e integral mediante una ruta de aprendizaje (roadmap) por niveles, con lecciones breves, ejercicios interactivos y un sistema de progreso gamificado..',
+    stack: ['Tecnologia en definicion'],
+  },
+  {
+    title: 'Siguiente reto',
+    description: 'Tu próxima idea.',
+    stack: ['Por definir'],
+  },
+];
+
+const posts = [
+  { title: 'Mi camino como desarrollador', summary: 'Un espacio para documentar lo que aprendo, las decisiones que tomo y los errores que me enseñan.', tag: 'Próximamente' },
+  { title: 'Notas de proyectos', summary: 'Explicaciones breves sobre los problemas que resolví y las herramientas que utilicé.', tag: 'Próximamente' },
+  { title: 'Aprendizajes de la semana', summary: 'Ideas y recursos que valen la pena guardar mientras sigo construyendo.', tag: 'Próximamente' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Angel Marco | Backend & Cloud Developer">
+  <div class="page-shell">
+    <header class="topbar" aria-label="Encabezado">
+      <p>Portafolio / 2026</p>
+    </header>
+
+    <section class="hero" id="inicio" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Backend · Cloud · Sistemas</p>
+        <h1 id="hero-title">Lógica<br />inquieta,<br /><span>sistemas<br />en orden.</span></h1>
+        <p>Prefiero un problema difícil a uno fácil. Dura más, pero enseña más.</p>
+      </div>
+      <div class="hero-window" aria-hidden="true">
+        <div class="window-bar"><span></span><span></span><span></span></div>
+        <p>currently.building()</p>
+        <strong>Preparacion para el <br />NASA Space Apps Challenge.<span>.</span></strong>
+      </div>
+    </section>
+
+    <section class="section" id="proyectos" aria-labelledby="projects-title">
+      <SectionHeading number="01" title="Proyectos" id="projects-title" />
+      <div class="project-grid">
+        {projects.map((project, index) => (
+          <article class="project-card glass-panel">
+            <p class="project-card__label">Proyecto {String(index + 1).padStart(2, '0')}</p>
+            <h3>{project.title}</h3>
+            <p class="project-card__description">{project.description}</p>
+            <ul class="tags" aria-label={`Tecnologías de ${project.title}`}>{project.stack.map((technology) => <li>{technology}</li>)}</ul>
+            {project.web ? (
+              <a class="project-link" href={project.web} target="_blank" rel="noreferrer">Ver sitio en vivo <span aria-hidden="true">↗</span></a>
+            ) : (
+              <span class="project-link project-link--pending">En preparación</span>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="credentials section" aria-labelledby="credentials-title">
+      <SectionHeading number="02" title="Formación y" accent="enfoque" id="credentials-title" />
+      <div class="credentials-grid">
+        <article class="credential glass-panel"><span aria-hidden="true">01</span><p>AWS Cloud Practitioner</p><strong>En curso</strong></article>
+        <article class="credential glass-panel"><span aria-hidden="true">02</span><p>MongoDB Associate Developer</p><strong>En curso</strong></article>
+        <article class="credential glass-panel"><span aria-hidden="true">03</span><p>Ingeniería en TI</p><strong>UPChiapas</strong></article>
+        <article class="credential glass-panel"><span aria-hidden="true">04</span><p>GCI World</p><strong>Universidad de Tokio</strong></article>
+      </div>
+    </section>
+
+    <section class="section" id="sobre-mi" aria-labelledby="about-title">
+      <SectionHeading number="03" title="¿Quién soy?" id="about-title" />
+      <div class="about-grid glass-panel">
+        <p>Me interesan los problemas que obligan a entender antes de resolver: una condición mal planteada, una integración que falla o un sistema que necesita orden.</p>
+        <p>Este espacio reúne lo que construyo y lo que voy aprendiendo. Para el contexto completo, abre mi historia desde el panel lateral.</p>
+      </div>
+    </section>
+
+    <section class="section" id="blog" aria-labelledby="blog-title">
+      <div class="blog-heading">
+        <SectionHeading number="04" title="Blog" id="blog-title" />
+        <p>Notas sobre lo que construyo y aprendo en el camino.</p>
+      </div>
+      <div class="post-grid">
+        {posts.map((post) => (
+          <article class="post-card glass-panel">
+            <p class="post-tag">{post.tag}</p>
+            <h3>{post.title}</h3>
+            <p>{post.summary}</p>
+            <span class="post-arrow" aria-hidden="true">↗</span>
+          </article>
+        ))}
+      </div>
+    </section>
+
+
+    <footer class="site-footer" id="contacto">
+      <p>© {new Date().getFullYear()} Angel Marco. Hecho con curiosidad y Astro.</p>
+      <a href="#inicio">Volver arriba ↑</a>
+    </footer>
+  </div>
+</Layout>

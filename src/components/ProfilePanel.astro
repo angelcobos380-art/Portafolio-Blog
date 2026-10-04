@@ -12,9 +12,7 @@ const facts = [
   <button class="profile-trigger" type="button" data-profile-panel="facts" aria-haspopup="dialog">
     Datos <span aria-hidden="true">↗</span>
   </button>
-  <button class="profile-trigger" type="button" data-profile-panel="story" aria-haspopup="dialog">
-    Historia <span aria-hidden="true">↗</span>
-  </button>
+  <a class="profile-trigger" href="/historia">Historia <span aria-hidden="true">↗</span></a>
 </div>
 
 <dialog class="profile-dialog" aria-labelledby="profile-dialog-title">
@@ -33,38 +31,19 @@ const facts = [
       </dl>
     </section>
 
-    <section data-profile-view="story" hidden>
-      <h2>Cómo llegué hasta aquí.</h2>
-      <div class="profile-story">
-        <p>Al entrar a la Politécnica no tenía una relación especial con la tecnología. Con el tiempo, los retos de lógica de la carrera cambiaron eso: cada problema resuelto abría una forma nueva de entender cómo funcionan las cosas.</p>
-        <p>La señal más clara llegó durante unas vacaciones, cuando pasé los días siguiendo un curso de JavaScript y construyendo un proyecto distinto cada día. No era una tarea; me gustaba encontrar el error, corregirlo y descubrir lo que solo aparece cuando algo realmente tiene que funcionar.</p>
-        <p>Desde entonces busco esa sensación: construir un pequeño universo y dejarlo ordenado. Esa curiosidad guía lo que estudio y los sistemas que quiero aprender a diseñar.</p>
-      </div>
-    </section>
   </div>
 </dialog>
 
 <script>
   const dialog = document.querySelector<HTMLDialogElement>('.profile-dialog');
-  const views = document.querySelectorAll<HTMLElement>('[data-profile-view]');
-  const kicker = document.querySelector<HTMLElement>('#profile-dialog-kicker');
-  const title = document.querySelector<HTMLElement>('#profile-dialog-title');
   const closeButton = document.querySelector<HTMLButtonElement>('.dialog-close');
 
-  function openProfile(viewName: string) {
-    if (!dialog || !kicker || !title) return;
-    views.forEach((view) => { view.hidden = view.dataset.profileView !== viewName; });
-    const isFacts = viewName === 'facts';
-    kicker.textContent = isFacts ? 'Perfil profesional' : 'Un poco de contexto';
-    title.id = isFacts ? 'profile-dialog-title' : '';
-    dialog.setAttribute('aria-labelledby', isFacts ? 'profile-dialog-title' : 'profile-story-title');
-    const storyTitle = dialog.querySelector<HTMLElement>('[data-profile-view="story"] h2');
-    if (storyTitle) storyTitle.id = 'profile-story-title';
-    dialog.showModal();
+  function openProfile() {
+    dialog?.showModal();
   }
 
   document.querySelectorAll<HTMLButtonElement>('[data-profile-panel]').forEach((button) => {
-    button.addEventListener('click', () => openProfile(button.dataset.profilePanel ?? 'facts'));
+    button.addEventListener('click', openProfile);
   });
   closeButton?.addEventListener('click', () => dialog?.close());
   dialog?.addEventListener('click', (event) => {

@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Mi historia — Angel Marco"
+  description="Cómo llegué hasta aquí: de no tener una relación especial con la tecnología a construir sistemas, resolver problemas reales y buscar entender cómo funcionan las cosas."
+>
+  <section class="historia">
+    <div class="historia-foto">
+      <img src="/foto-angel.jpg" alt="Angel Marco Martinez Cobos" />
+    </div>
+
+    <div class="historia-texto">
+      <p class="eyebrow">Un poco de contexto</p>
+      <h1>Cómo llegué hasta aquí.</h1>
+
+      <p>Al entrar a la Politécnica no tenía una relación especial con la tecnología. Con el tiempo, los retos de lógica de la carrera cambiaron eso: cada problema resuelto abría una forma nueva de entender cómo funcionan las cosas.</p>
+
+      <p>La señal más clara llegó durante unas vacaciones, cuando pasé los días siguiendo un curso de JavaScript y construyendo un proyecto distinto cada día. No era una tarea; me gustaba encontrar el error, corregirlo y descubrir lo que solo aparece cuando algo realmente tiene que funcionar.</p>
+
+      <p>Desde entonces busco esa sensación: construir un pequeño universo y dejarlo ordenado. Esa curiosidad guía lo que estudio y los sistemas que quiero aprender a diseñar.</p>
+
+      <a class="volver" href="/">← Volver al inicio</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .historia {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 4rem);
+    width: min(1150px, 100%);
+    margin: 0 auto;
+    padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .historia-foto img {
+    position: sticky;
+    top: 4rem;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--panel);
+  }
+
+  .historia-texto h1 {
+    max-width: 10ch;
+    margin: 0 0 2rem;
+    color: var(--text);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: .92;
+    letter-spacing: -.08em;
+  }
+
+  .historia-texto p:not(.eyebrow) {
+    max-width: 62ch;
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    font-size: 1.08rem;
+    line-height: 1.75;
+  }
+
+  .historia-texto p:nth-of-type(2) { color: var(--text); }
+
+  .volver {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--accent);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .volver:hover { text-decoration: underline; }
+
+  @media (max-width: 760px) {
+    .historia { grid-template-columns: 1fr; gap: 2rem; }
+    .historia-foto img { position: static; aspect-ratio: 4 / 3; }
+  }
+</style>

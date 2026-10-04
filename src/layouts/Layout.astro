@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import ProfilePanel from '../components/ProfilePanel.astro';
 
 interface Props {
   title?: string;
@@ -32,9 +33,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.url);
       <div class="personal-info">
         <p class="eyebrow">Portafolio personal</p>
         <h1>Angel Marco<br />Martinez Cobos</h1>
-        <p class="role"> Backend & Cloud Developer </p>
-        <p class="summary">  </p>
+        <p class="role">Backend & Cloud Developer</p>
+        <p class="summary">Construyo mientras aprendo a pensar mejor los sistemas.</p>
       </div>
+      <ProfilePanel />
       <nav class="sidebar-nav">
         <a href="#inicio">Inicio</a>
         <a href="#sobre-mi">Sobre mí</a>

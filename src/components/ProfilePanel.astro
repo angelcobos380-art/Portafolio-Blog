@@ -1,0 +1,73 @@
+---
+const facts = [
+  ['Enfoque', 'Backend y cloud'],
+  ['Stack actual', 'JavaScript · Astro · Git'],
+  ['En curso', 'AWS Cloud Practitioner · MongoDB Associate Developer'],
+  ['Formación', 'Ingeniería en Tecnologías de la Información · UPChiapas'],
+  ['Experiencia académica', 'GCI World · Universidad de Tokio'],
+];
+---
+
+<div class="profile-switcher" aria-label="Perfil profesional">
+  <button class="profile-trigger" type="button" data-profile-panel="facts" aria-haspopup="dialog">
+    Datos <span aria-hidden="true">↗</span>
+  </button>
+  <button class="profile-trigger" type="button" data-profile-panel="story" aria-haspopup="dialog">
+    Historia <span aria-hidden="true">↗</span>
+  </button>
+</div>
+
+<dialog class="profile-dialog" aria-labelledby="profile-dialog-title">
+  <div class="profile-dialog__content">
+    <div class="profile-dialog__header">
+      <p class="eyebrow" id="profile-dialog-kicker">Perfil</p>
+      <button class="dialog-close" type="button" aria-label="Cerrar panel">×</button>
+    </div>
+
+    <section data-profile-view="facts">
+      <h2 id="profile-dialog-title">Datos, sin rodeos.</h2>
+      <dl class="profile-facts">
+        {facts.map(([label, value]) => (
+          <div><dt>{label}</dt><dd>{value}</dd></div>
+        ))}
+      </dl>
+    </section>
+
+    <section data-profile-view="story" hidden>
+      <h2>Cómo llegué hasta aquí.</h2>
+      <div class="profile-story">
+        <p>Al entrar a la Politécnica no tenía una relación especial con la tecnología. Con el tiempo, los retos de lógica de la carrera cambiaron eso: cada problema resuelto abría una forma nueva de entender cómo funcionan las cosas.</p>
+        <p>La señal más clara llegó durante unas vacaciones, cuando pasé los días siguiendo un curso de JavaScript y construyendo un proyecto distinto cada día. No era una tarea; me gustaba encontrar el error, corregirlo y descubrir lo que solo aparece cuando algo realmente tiene que funcionar.</p>
+        <p>Desde entonces busco esa sensación: construir un pequeño universo y dejarlo ordenado. Esa curiosidad guía lo que estudio y los sistemas que quiero aprender a diseñar.</p>
+      </div>
+    </section>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.profile-dialog');
+  const views = document.querySelectorAll<HTMLElement>('[data-profile-view]');
+  const kicker = document.querySelector<HTMLElement>('#profile-dialog-kicker');
+  const title = document.querySelector<HTMLElement>('#profile-dialog-title');
+  const closeButton = document.querySelector<HTMLButtonElement>('.dialog-close');
+
+  function openProfile(viewName: string) {
+    if (!dialog || !kicker || !title) return;
+    views.forEach((view) => { view.hidden = view.dataset.profileView !== viewName; });
+    const isFacts = viewName === 'facts';
+    kicker.textContent = isFacts ? 'Perfil profesional' : 'Un poco de contexto';
+    title.id = isFacts ? 'profile-dialog-title' : '';
+    dialog.setAttribute('aria-labelledby', isFacts ? 'profile-dialog-title' : 'profile-story-title');
+    const storyTitle = dialog.querySelector<HTMLElement>('[data-profile-view="story"] h2');
+    if (storyTitle) storyTitle.id = 'profile-story-title';
+    dialog.showModal();
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-profile-panel]').forEach((button) => {
+    button.addEventListener('click', () => openProfile(button.dataset.profilePanel ?? 'facts'));
+  });
+  closeButton?.addEventListener('click', () => dialog?.close());
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+</script>

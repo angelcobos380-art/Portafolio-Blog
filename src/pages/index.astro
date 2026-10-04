@@ -3,9 +3,22 @@ import Layout from '../layouts/Layout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 
 const projects = [
-  { title: 'Tu primer proyecto', role: 'Tu rol en el proyecto', area: 'Área en la que se trabajó', stack: ['Astro', 'HTML', 'CSS'] },
-  { title: 'Proyecto en construcción', role: 'Añade aquí tu aportación', area: 'Problema que resuelve', stack: ['JavaScript', 'Git'] },
-  { title: 'Siguiente reto', role: 'Lo que quieres aprender', area: 'Tu próxima idea', stack: ['Por definir'] },
+  {
+    title: 'Calculadora de gasto semanal',
+    web: 'https://calculadora-gasto-semanal.vercel.app',
+    description: 'Una aplicación para definir un presupuesto semanal y registrar gastos con una interfaz clara y directa.',
+    stack: ['JavaScript', 'HTML', 'CSS'],
+  },
+  {
+    title: 'RoadMath',
+    description: 'Aplicación móvil educativa que enseña cálculo diferencial e integral mediante una ruta de aprendizaje (roadmap) por niveles, con lecciones breves, ejercicios interactivos y un sistema de progreso gamificado..',
+    stack: ['JavaScript', 'Git'],
+  },
+  {
+    title: 'Siguiente reto',
+    description: 'Tu próxima idea.',
+    stack: ['Por definir'],
+  },
 ];
 
 const posts = [
@@ -26,10 +39,6 @@ const posts = [
         <p class="eyebrow">Backend · Cloud · Sistemas</p>
         <h1 id="hero-title">Lógica<br />inquieta,<br /><span>sistemas<br />en orden.</span></h1>
         <p>Prefiero un problema difícil a uno fácil. Dura más, pero enseña más.</p>
-        <div class="hero-actions">
-          <a class="button" href="#proyectos">Ver proyectos <span aria-hidden="true">↘</span></a>
-          <a class="text-link" href="/historia">Leer mi historia <span aria-hidden="true">↗</span></a>
-        </div>
       </div>
       <div class="hero-window" aria-hidden="true">
         <div class="window-bar"><span></span><span></span><span></span></div>
@@ -38,8 +47,27 @@ const posts = [
       </div>
     </section>
 
+    <section class="section" id="proyectos" aria-labelledby="projects-title">
+      <SectionHeading number="01" title="Proyectos" id="projects-title" />
+      <div class="project-grid">
+        {projects.map((project, index) => (
+          <article class="project-card glass-panel">
+            <p class="project-card__label">Proyecto {String(index + 1).padStart(2, '0')}</p>
+            <h3>{project.title}</h3>
+            <p class="project-card__description">{project.description}</p>
+            <ul class="tags" aria-label={`Tecnologías de ${project.title}`}>{project.stack.map((technology) => <li>{technology}</li>)}</ul>
+            {project.web ? (
+              <a class="project-link" href={project.web} target="_blank" rel="noreferrer">Ver sitio en vivo <span aria-hidden="true">↗</span></a>
+            ) : (
+              <span class="project-link project-link--pending">En preparación</span>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section class="credentials section" aria-labelledby="credentials-title">
-      <SectionHeading number="01" title="Formación y" accent="enfoque" id="credentials-title" />
+      <SectionHeading number="02" title="Formación y" accent="enfoque" id="credentials-title" />
       <div class="credentials-grid">
         <article class="credential glass-panel"><span aria-hidden="true">01</span><p>AWS Cloud Practitioner</p><strong>En curso</strong></article>
         <article class="credential glass-panel"><span aria-hidden="true">02</span><p>MongoDB Associate Developer</p><strong>En curso</strong></article>
@@ -49,27 +77,10 @@ const posts = [
     </section>
 
     <section class="section" id="sobre-mi" aria-labelledby="about-title">
-      <SectionHeading number="02" title="¿Quién soy?" id="about-title" />
+      <SectionHeading number="03" title="¿Quién soy?" id="about-title" />
       <div class="about-grid glass-panel">
         <p>Me interesan los problemas que obligan a entender antes de resolver: una condición mal planteada, una integración que falla o un sistema que necesita orden.</p>
         <p>Este espacio reúne lo que construyo y lo que voy aprendiendo. Para el contexto completo, abre mi historia desde el panel lateral.</p>
-      </div>
-    </section>
-
-    <section class="section" id="proyectos" aria-labelledby="projects-title">
-      <SectionHeading number="03" title="Mis" accent="proyectos" id="projects-title" />
-      <div class="project-grid">
-        {projects.map((project, index) => (
-          <article class="project-card glass-panel">
-            <div class="project-card__top"><p>0{index + 1}</p><span>Proyecto</span></div>
-            <h3>{project.title}</h3>
-            <dl>
-              <div><dt>Rol</dt><dd>{project.role}</dd></div>
-              <div><dt>Enfoque</dt><dd>{project.area}</dd></div>
-            </dl>
-            <ul class="tags" aria-label={`Tecnologías de ${project.title}`}>{project.stack.map((technology) => <li>{technology}</li>)}</ul>
-          </article>
-        ))}
       </div>
     </section>
 
@@ -89,6 +100,7 @@ const posts = [
         ))}
       </div>
     </section>
+
 
     <footer class="site-footer" id="contacto">
       <p>© {new Date().getFullYear()} Angel Marco. Hecho con curiosidad y Astro.</p>

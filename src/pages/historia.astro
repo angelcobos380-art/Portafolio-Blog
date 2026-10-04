@@ -7,10 +7,6 @@ import Layout from '../layouts/Layout.astro';
   description="Cómo llegué hasta aquí: de no tener una relación especial con la tecnología a construir sistemas, resolver problemas reales y buscar entender cómo funcionan las cosas."
 >
   <section class="historia">
-    <div class="historia-foto">
-      <img src="/foto-angel.jpg" alt="Angel Marco Martinez Cobos" />
-    </div>
-
     <div class="historia-texto">
       <p class="eyebrow">Un poco de contexto</p>
       <h1>Cómo llegué hasta aquí.</h1>
@@ -21,7 +17,7 @@ import Layout from '../layouts/Layout.astro';
 
       <p>Desde entonces busco esa sensación: construir un pequeño universo y dejarlo ordenado. Esa curiosidad guía lo que estudio y los sistemas que quiero aprender a diseñar.</p>
 
-      <a class="volver" href="/">← Volver al inicio</a>
+      <a class="volver" href="/">← Volver a los proyectos</a>
     </div>
   </section>
 </Layout>
@@ -29,23 +25,11 @@ import Layout from '../layouts/Layout.astro';
 <style>
   .historia {
     display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: clamp(2.5rem, 6vw, 4rem);
+    grid-template-columns: minmax(0, 1fr);
     width: min(1150px, 100%);
     margin: 0 auto;
     padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 5vw, 5rem);
     align-items: start;
-  }
-
-  .historia-foto img {
-    position: sticky;
-    top: 4rem;
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    background: var(--panel);
   }
 
   .historia-texto h1 {
@@ -78,8 +62,4 @@ import Layout from '../layouts/Layout.astro';
 
   .volver:hover { text-decoration: underline; }
 
-  @media (max-width: 760px) {
-    .historia { grid-template-columns: 1fr; gap: 2rem; }
-    .historia-foto img { position: static; aspect-ratio: 4 / 3; }
-  }
 </style>

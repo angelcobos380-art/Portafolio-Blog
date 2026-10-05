@@ -23,10 +23,23 @@ const projects = [
 
 
 const posts = [
-  { title: 'Mi camino como desarrollador', summary: 'Un espacio para documentar lo que aprendo, las decisiones que tomo y los errores que me enseñan.', tag: 'Próximamente' },
-  { title: 'Notas de proyectos', summary: 'Explicaciones breves sobre los problemas que resolví y las herramientas que utilicé.', tag: 'Próximamente' },
-  { title: 'Aprendizajes de la semana', summary: 'Ideas y recursos que valen la pena guardar mientras sigo construyendo.', tag: 'Próximamente' },
+  { title: 'Cómo prepararte para el AWS Certified Cloud Practitioner siendo estudiante.', summary: 'Un espacio para documentar los recursos que use para esta preparacion y como pude obtener descuentos/ vouchers como estudiante', tag: 'Próximamente' },
+  { title: 'GCI World: Mi experiencia en el programa de Ciencia de Datos de la Universidad de Tokio.', summary: ' Informar acerca de el proceso de postulación, qué requisitos me pidieron, y qué estás aprendiendo en este programa.', tag: 'Próximamente' },
+  { title: 'Como sobrevir a tu primer integrador', summary: 'Ideas y recursos que me hubieran servido a mi para afrontar el reto de mi primer integrador.', tag: 'Próximamente' },
 ];
+
+// ✏️ Cambia estos datos por los tuyos
+const email = 'angelcobos380@gmail.com';
+const contacts = [
+  { name: 'GitHub', handle: '@angelcobos380-art', href: 'https://github.com/angelcobos380-art', hint: 'Mi código y proyectos', icon: 'github' },
+  { name: 'LinkedIn', handle: 'Angel Marco Martinez', href: 'www.linkedin.com/in/angel-marco-martinez-cobos-b68184432', hint: 'Perfil profesional', icon: 'linkedin' },
+  { name: 'Correo', handle: email, href: `mailto:${email}`, hint: 'Escríbeme directo', icon: 'mail' },
+];
+const icons: Record<string, string> = {
+  github: '<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>',
+  linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+  mail: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',
+};
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -43,7 +56,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
       <div class="hero-copy">
         <p class="eyebrow">Backend · Cloud · Sistemas</p>
         <h1 id="hero-title">Lógica<br />inquieta,<br /><span>sistemas<br />en orden.</span></h1>
-        <p>Prefiero un problema difícil a uno fácil. Dura más, pero enseña más.</p>
+        <p>Construyendo arquitecturas backend resilientes y escalables. Me apasiona resolver problemas complejos y transformar la lógica en sistemas ordenados.</p>
       </div>
       <div class="hero-window" aria-hidden="true">
         <div class="window-bar"><span></span><span></span><span></span></div>
@@ -74,10 +87,10 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <section class="credentials section" aria-labelledby="credentials-title">
       <SectionHeading number="02" title="Formación y" accent="enfoque" id="credentials-title" />
       <div class="credentials-grid">
-        <article class="credential glass-panel"><span aria-hidden="true">01</span><p>AWS Cloud Practitioner</p><strong>En curso</strong></article>
-        <article class="credential glass-panel"><span aria-hidden="true">02</span><p>MongoDB Associate Developer</p><strong>En curso</strong></article>
-        <article class="credential glass-panel"><span aria-hidden="true">03</span><p>Ingeniería en TI</p><strong>UPChiapas</strong></article>
-        <article class="credential glass-panel"><span aria-hidden="true">04</span><p>GCI World</p><strong>Universidad de Tokio</strong></article>
+        <article class="credential glass-panel"><span aria-hidden="true">01 Cursando</span><p>Ingeniería en TI</p><strong>Universidad Politecnica de Chiapas</strong></article>
+        <article class="credential glass-panel"><span aria-hidden="true">02 </span><p>AWS Cloud Practitioner</p><strong>En preparacion</strong></article>
+        <article class="credential glass-panel"><span aria-hidden="true">03 </span><p>MongoDB Associate Developer</p><strong>En preparacion</strong></article>
+        <article class="credential glass-panel"><span aria-hidden="true">04 Cursando</span><p> Data Science & AI <br> GCI World</p><strong> Laboratorio Matsuo-Iwasawa de la Universidad de Tokio</strong></article>
       </div>
     </section>
 
@@ -106,10 +119,32 @@ const base = import.meta.env.BASE_URL.endsWith('/')
       </div>
     </section>
 
+    <section class="section" id="contacto" aria-labelledby="contact-title">
+      <div class="blog-heading">
+        <SectionHeading number="05" title="Contacto y" accent="redes" id="contact-title" />
+        <p>¿Tienes una idea, una oportunidad o solo ganas de platicar? Aquí me encuentras.</p>
+      </div>
+      <div class="contact-grid">
+        {contacts.map((c) => (
+          <a class="contact-card glass-panel" href={c.href} target={c.icon === 'mail' ? undefined : '_blank'} rel="noreferrer">
+            <span class="contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={icons[c.icon]} />
+            </span>
+            <span class="contact-text">
+              <strong>{c.name}</strong>
+              <small>{c.hint}</small>
+            </span>
+            <span class="contact-handle">{c.handle}</span>
+            <span class="contact-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
 
-    <footer class="site-footer" id="contacto">
+    <footer class="site-footer">
       <p>© {new Date().getFullYear()} Angel Marco. Hecho con curiosidad y Astro.</p>
       <a href={`${base}#inicio`}>Volver arriba ↑</a>
     </footer>
   </div>
 </Layout>
+

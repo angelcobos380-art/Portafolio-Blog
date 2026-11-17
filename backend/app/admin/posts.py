@@ -1,12 +1,13 @@
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 from sqlmodel import Session, select
 
 from app.admin.deps import get_admin_user, templates
 from app.core.database import Category, Post, get_session
+from app.core.deploy import trigger_rebuild
 from app.core.utils import slugify
 from app.schemas.post import PostCreate, PostStatus
 
@@ -153,7 +154,7 @@ def edit_post(
 
 
 @router.post("/{post_id}/publish")
-def publish_post(post_id: str, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
+def publish_post(post_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
     post = session.get(Post, post_id)
     if not post:
         return RedirectResponse("/admin/posts", status_code=303)
@@ -172,11 +173,12 @@ def publish_post(post_id: str, session: Session = Depends(get_session), user: di
     post.updated_at = datetime.now(timezone.utc).isoformat()
     session.add(post)
     session.commit()
+    background_tasks.add_task(trigger_rebuild)
     return RedirectResponse("/admin/posts", status_code=303)
 
 
 @router.post("/{post_id}/unpublish")
-def unpublish_post(post_id: str, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
+def unpublish_post(post_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
     post = session.get(Post, post_id)
     if not post:
         return RedirectResponse("/admin/posts", status_code=303)
@@ -186,11 +188,12 @@ def unpublish_post(post_id: str, session: Session = Depends(get_session), user: 
         post.updated_at = datetime.now(timezone.utc).isoformat()
         session.add(post)
         session.commit()
+        background_tasks.add_task(trigger_rebuild)
     return RedirectResponse("/admin/posts", status_code=303)
 
 
 @router.post("/{post_id}/archive")
-def archive_post(post_id: str, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
+def archive_post(post_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
     post = session.get(Post, post_id)
     if not post:
         return RedirectResponse("/admin/posts", status_code=303)
@@ -200,6 +203,7 @@ def archive_post(post_id: str, session: Session = Depends(get_session), user: di
         post.updated_at = datetime.now(timezone.utc).isoformat()
         session.add(post)
         session.commit()
+        background_tasks.add_task(trigger_rebuild)
     return RedirectResponse("/admin/posts", status_code=303)
 
 

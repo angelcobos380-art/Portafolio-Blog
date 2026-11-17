@@ -1,33 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
+import { excerpt, getPublicPosts, getPublicProjects } from '../lib/cms';
 
-const projects = [
-  {
-    title: 'Calculadora de gasto semanal',
-    web: 'https://calculadora-gasto-semanal.vercel.app',
-    description: 'Una aplicación para definir un presupuesto semanal y registrar gastos con una interfaz clara y directa.',
-    stack: ['JavaScript', 'HTML', 'CSS'],
-  },
-  {
-    title: 'RoadMath',
-    description: 'Aplicación móvil educativa que enseña cálculo diferencial e integral mediante una ruta de aprendizaje (roadmap) por niveles, con lecciones breves, ejercicios interactivos y un sistema de progreso gamificado..',
-    stack: ['Tecnologia en definicion'],
-  },
-  {
-    title: 'Website responsive',
-    web: 'https://angelcobos380-art.github.io/Carrito_Compras_JSModerno/',
-    description: 'La aplicación simula la interacción de un carrito de compras en una tienda en línea, gestionando la adición, eliminación y persistencia de productos en el navegador.',
-    stack: ['JavaScript'],
-  },
-];
+const projects = (await getPublicProjects()).map((project) => ({
+  title: project.title,
+  slug: project.slug,
+  web: project.demo_url,
+  description: excerpt(project.description, 180),
+  stack: project.stack,
+}));
 
-
-const posts = [
-  { title: 'Cómo prepararte para el AWS Certified Cloud Practitioner siendo estudiante.', summary: 'Un espacio para documentar los recursos que use para esta preparacion y como pude obtener descuentos/ vouchers como estudiante', tag: 'Próximamente' },
-  { title: 'GCI World: Mi experiencia en el programa de Ciencia de Datos de la Universidad de Tokio.', summary: ' Informar acerca de el proceso de postulación, qué requisitos me pidieron, y qué estás aprendiendo en este programa.', tag: 'Próximamente' },
-  { title: 'Como sobrevir a tu primer integrador', summary: 'Ideas y recursos que me hubieran servido a mi para afrontar el reto de mi primer integrador.', tag: 'Próximamente' },
-];
+const posts = (await getPublicPosts()).map((post) => ({
+  title: post.title,
+  slug: post.slug,
+  summary: excerpt(post.content, 160),
+  tags: post.tags,
+}));
 
 // ✏️ Cambia estos datos por los tuyos
 const email = 'angelcobos380@gmail.com';
@@ -69,8 +58,8 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <section class="section" id="proyectos" aria-labelledby="projects-title">
       <SectionHeading number="01" title="Proyectos" id="projects-title" />
       <div class="project-grid">
-        {projects.map((project, index) => (
-          <article class="project-card glass-panel">
+        {projects.length > 0 ? projects.map((project, index) => (
+          <article class="project-card glass-panel" data-view-slug={project.slug}>
             <p class="project-card__label">Proyecto {String(index + 1).padStart(2, '0')}</p>
             <h3>{project.title}</h3>
             <p class="project-card__description">{project.description}</p>
@@ -81,7 +70,9 @@ const base = import.meta.env.BASE_URL.endsWith('/')
               <span class="project-link project-link--pending">En preparación</span>
             )}
           </article>
-        ))}
+        )) : (
+          <p class="empty-state">No hay proyectos todavía.</p>
+        )}
       </div>
     </section>
 
@@ -109,14 +100,16 @@ const base = import.meta.env.BASE_URL.endsWith('/')
         <p>Notas sobre lo que construyo y aprendo en el camino.</p>
       </div>
       <div class="post-grid">
-        {posts.map((post) => (
-          <article class="post-card glass-panel">
-            <p class="post-tag">{post.tag}</p>
+        {posts.length > 0 ? posts.map((post) => (
+          <a class="post-card glass-panel" href={`${base}blog/${post.slug}`}>
+            <p class="post-tag">{post.tags[0] ?? 'Blog'}</p>
             <h3>{post.title}</h3>
             <p>{post.summary}</p>
             <span class="post-arrow" aria-hidden="true">↗</span>
-          </article>
-        ))}
+          </a>
+        )) : (
+          <p class="empty-state">No hay publicaciones todavía.</p>
+        )}
       </div>
     </section>
 
@@ -148,4 +141,16 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     </footer>
   </div>
 </Layout>
+
+<script>
+  const cmsBase = import.meta.env.PUBLIC_CMS_BASE_URL ?? '';
+  if (cmsBase) {
+    document.querySelectorAll('[data-view-slug]').forEach((card) => {
+      card.addEventListener('click', () => {
+        const slug = card.getAttribute('data-view-slug');
+        if (slug) navigator.sendBeacon(`${cmsBase}/public/projects/${slug}/view`);
+      });
+    });
+  }
+</script>
 

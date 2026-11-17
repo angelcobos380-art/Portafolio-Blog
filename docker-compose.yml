@@ -1,0 +1,17 @@
+services:
+  cms:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Se requiere SECRET_KEY}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Se requiere ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Se requiere ADMIN_PASSWORD}
+      DATABASE_URL: sqlite:////data/cms.db
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      VERCEL_DEPLOY_HOOK: ${VERCEL_DEPLOY_HOOK:-}
+    volumes:
+      - cms-data:/data
+
+volumes:
+  cms-data:

@@ -27,6 +27,7 @@ jobs:
           node-version: 22
         env:
           DEPLOY_TARGET: gh-pages
+          PUBLIC_CMS_BASE_URL: ${{ secrets.PUBLIC_CMS_BASE_URL }}
         # Por defecto corre: npm install, npm run build,
         # y sube el contenido de ./dist como el artifact de Pages.
 

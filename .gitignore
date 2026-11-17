@@ -22,3 +22,14 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# python
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite3
+venv/
+backend/venv/
+
+# README del backend se mantiene local (no se versiona)
+backend/README.md

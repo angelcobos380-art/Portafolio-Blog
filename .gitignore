@@ -33,3 +33,6 @@ backend/venv/
 
 # README del backend se mantiene local (no se versiona)
 backend/README.md
+
+# Documentos de instrucciones/guías se mantienen locales (no se versionan)
+DEPLOYMENT.md

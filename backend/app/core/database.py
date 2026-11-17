@@ -7,9 +7,11 @@ from uuid6 import uuid7
 
 from app.core.config import settings
 
+_connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+
 engine = create_engine(
     settings.DATABASE_URL,
-    connect_args={"check_same_thread": False},
+    connect_args=_connect_args,
 )
 
 

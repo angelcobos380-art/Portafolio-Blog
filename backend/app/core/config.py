@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     LOGIN_LOCKOUT_MINUTES: int = 15
 
     VERCEL_DEPLOY_HOOK: Optional[str] = None
+    COOKIE_SECURE: bool = False
 
     ADMIN_EMAIL: EmailStr
     ADMIN_PASSWORD: str = Field(..., min_length=8, max_length=72)

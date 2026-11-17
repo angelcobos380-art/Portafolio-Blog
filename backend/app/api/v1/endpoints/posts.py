@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Response, status
 from sqlmodel import Session, select
 
 from app.core.database import Category, Post, get_session
+from app.core.deploy import trigger_rebuild
 from app.core.security import get_current_user
 from app.core.utils import slugify
 from app.schemas.post import PostCreate, PostResponse, PostStatus, PostUpdate
@@ -94,7 +95,7 @@ def update_post(post_id: str, post_in: PostUpdate, session: Session = Depends(ge
 
 
 @router.post("/{post_id}/publish", response_model=PostResponse)
-def publish_post(post_id: str, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
+def publish_post(post_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
     post = session.get(Post, post_id)
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post no encontrado.")
@@ -118,11 +119,12 @@ def publish_post(post_id: str, session: Session = Depends(get_session), current_
     session.add(post)
     session.commit()
     session.refresh(post)
+    background_tasks.add_task(trigger_rebuild)
     return post
 
 
 @router.post("/{post_id}/unpublish", response_model=PostResponse)
-def unpublish_post(post_id: str, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
+def unpublish_post(post_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
     post = session.get(Post, post_id)
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post no encontrado.")
@@ -135,11 +137,12 @@ def unpublish_post(post_id: str, session: Session = Depends(get_session), curren
     session.add(post)
     session.commit()
     session.refresh(post)
+    background_tasks.add_task(trigger_rebuild)
     return post
 
 
 @router.post("/{post_id}/archive", response_model=PostResponse)
-def archive_post(post_id: str, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
+def archive_post(post_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
     post = session.get(Post, post_id)
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post no encontrado.")
@@ -152,6 +155,7 @@ def archive_post(post_id: str, session: Session = Depends(get_session), current_
     session.add(post)
     session.commit()
     session.refresh(post)
+    background_tasks.add_task(trigger_rebuild)
     return post
 
 

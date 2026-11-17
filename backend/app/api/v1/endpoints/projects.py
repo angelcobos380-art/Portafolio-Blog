@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Response, status
 from sqlmodel import Session, select
 
 from app.core.database import Project, get_session
+from app.core.deploy import trigger_rebuild
 from app.core.security import get_current_user
 from app.core.utils import slugify
 from app.schemas.project import ProjectCreate, ProjectResponse, ProjectStatus, ProjectUpdate
@@ -91,7 +92,7 @@ def update_project(project_id: str, project_in: ProjectUpdate, session: Session 
 
 
 @router.post("/{project_id}/publish", response_model=ProjectResponse)
-def publish_project(project_id: str, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
+def publish_project(project_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
     project = session.get(Project, project_id)
     if not project:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto no encontrado.")
@@ -107,11 +108,12 @@ def publish_project(project_id: str, session: Session = Depends(get_session), cu
     session.add(project)
     session.commit()
     session.refresh(project)
+    background_tasks.add_task(trigger_rebuild)
     return project
 
 
 @router.post("/{project_id}/unpublish", response_model=ProjectResponse)
-def unpublish_project(project_id: str, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
+def unpublish_project(project_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
     project = session.get(Project, project_id)
     if not project:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto no encontrado.")
@@ -124,15 +126,17 @@ def unpublish_project(project_id: str, session: Session = Depends(get_session), 
     session.add(project)
     session.commit()
     session.refresh(project)
+    background_tasks.add_task(trigger_rebuild)
     return project
 
 
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_project(project_id: str, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
+def delete_project(project_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), current_user: dict = Depends(get_current_user)):
     project = session.get(Project, project_id)
     if not project:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto no encontrado.")
 
     session.delete(project)
     session.commit()
+    background_tasks.add_task(trigger_rebuild)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

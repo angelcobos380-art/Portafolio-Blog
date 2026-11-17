@@ -34,7 +34,7 @@ const BASE_URL = import.meta.env.PUBLIC_CMS_BASE_URL;
 async function fetchJson<T>(path: string): Promise<T | null> {
   if (!BASE_URL) return null;
   try {
-    const res = await fetch(`${BASE_URL}${path}`);
+    const res = await fetch(`${BASE_URL}${path}`, { signal: AbortSignal.timeout(20000) });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch (err) {

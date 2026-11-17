@@ -1,5 +1,3 @@
-import re
-import unicodedata
 from datetime import datetime, timezone
 from typing import List
 
@@ -8,15 +6,10 @@ from sqlmodel import Session, select
 
 from app.core.database import Category, Post, get_session
 from app.core.security import get_current_user
+from app.core.utils import slugify
 from app.schemas.post import PostCreate, PostResponse, PostStatus, PostUpdate
 
 router = APIRouter(prefix="/posts", tags=["Posts"])
-
-
-def slugify(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
-    text = re.sub(r"[^a-z0-9\s-]", "", text.lower().strip())
-    return re.sub(r"[\s-]+", "-", text).strip("-")
 
 
 @router.post("", response_model=PostResponse, status_code=status.HTTP_201_CREATED)

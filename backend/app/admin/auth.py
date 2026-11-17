@@ -49,7 +49,7 @@ def login_submit(
     record_login_attempt(session, email, success=True)
     token = create_access_token({"sub": user.user_id, "email": user.email, "role": user.role})
     response = RedirectResponse("/admin/", status_code=303)
-    response.set_cookie("access_token", token, httponly=True, samesite="lax")
+    response.set_cookie("access_token", token, httponly=True, samesite="lax", secure=settings.COOKIE_SECURE)
     return response
 
 

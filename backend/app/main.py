@@ -35,3 +35,8 @@ async def root():
         "version": settings.VERSION,
         "docs_url": "/docs",
     }
+
+
+@app.get("/health", tags=["Health Check"])
+async def health():
+    return {"status": "ok"}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Proyectos — CMS Admin{% endblock %}
+{% block content %}
+<div class="row">
+  <h1>Proyectos</h1>
+  <a class="btn" href="/admin/projects/new">Nuevo proyecto</a>
+</div>
+<div class="panel">
+  <table>
+    <tr><th>Título</th><th>Estado</th><th>Destacado</th><th>Orden</th><th>Acciones</th></tr>
+    {% for p in projects %}
+    <tr>
+      <td>{{ p.title }}</td>
+      <td><span class="badge {{ p.status }}">{{ p.status }}</span></td>
+      <td>{{ 'Sí' if p.is_featured else 'No' }}</td>
+      <td>{{ p.sort_order }}</td>
+      <td>
+        <a class="btn ghost" href="/admin/projects/{{ p.project_id }}/edit">Editar</a>
+        {% if p.status == 'BORRADOR' %}
+        <form class="inline" method="post" action="/admin/projects/{{ p.project_id }}/publish"><button type="submit">Publicar</button></form>
+        {% endif %}
+        {% if p.status == 'PUBLICADO' %}
+        <form class="inline" method="post" action="/admin/projects/{{ p.project_id }}/unpublish"><button class="ghost" type="submit">Despublicar</button></form>
+        {% endif %}
+        <form class="inline" method="post" action="/admin/projects/{{ p.project_id }}/delete"><button class="danger" type="submit">Borrar</button></form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No hay proyectos.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

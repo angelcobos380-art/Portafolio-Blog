@@ -1,12 +1,13 @@
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 from sqlmodel import Session, select
 
 from app.admin.deps import get_admin_user, templates
 from app.core.database import Project, get_session
+from app.core.deploy import trigger_rebuild
 from app.core.utils import slugify
 from app.schemas.project import ProjectCreate, ProjectStatus
 
@@ -177,7 +178,7 @@ def edit_project(
 
 
 @router.post("/{project_id}/publish")
-def publish_project(project_id: str, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
+def publish_project(project_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
     project = session.get(Project, project_id)
     if not project:
         return RedirectResponse("/admin/projects", status_code=303)
@@ -187,11 +188,12 @@ def publish_project(project_id: str, session: Session = Depends(get_session), us
         project.updated_at = datetime.now(timezone.utc).isoformat()
         session.add(project)
         session.commit()
+        background_tasks.add_task(trigger_rebuild)
     return RedirectResponse("/admin/projects", status_code=303)
 
 
 @router.post("/{project_id}/unpublish")
-def unpublish_project(project_id: str, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
+def unpublish_project(project_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
     project = session.get(Project, project_id)
     if not project:
         return RedirectResponse("/admin/projects", status_code=303)
@@ -201,15 +203,17 @@ def unpublish_project(project_id: str, session: Session = Depends(get_session), 
         project.updated_at = datetime.now(timezone.utc).isoformat()
         session.add(project)
         session.commit()
+        background_tasks.add_task(trigger_rebuild)
     return RedirectResponse("/admin/projects", status_code=303)
 
 
 @router.post("/{project_id}/delete")
-def delete_project(project_id: str, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
+def delete_project(project_id: str, background_tasks: BackgroundTasks, session: Session = Depends(get_session), user: dict = Depends(get_admin_user)):
     project = session.get(Project, project_id)
     if not project:
         return RedirectResponse("/admin/projects", status_code=303)
 
     session.delete(project)
     session.commit()
+    background_tasks.add_task(trigger_rebuild)
     return RedirectResponse("/admin/projects", status_code=303)

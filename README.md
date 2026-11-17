@@ -19,5 +19,3 @@ El contenido (posts, proyectos, categorías y métricas) se gestiona desde un **
 
 - El portafolio lee el contenido del CMS en **build-time** (variable `PUBLIC_CMS_BASE_URL`).
 - Al publicar/despublicar contenido, el CMS dispara un **rebuild** del sitio.
-
-Consulta la guía completa en [`DEPLOYMENT.md`](DEPLOYMENT.md).

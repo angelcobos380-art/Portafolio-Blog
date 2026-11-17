@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import EmailStr, Field, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -17,6 +19,8 @@ class Settings(BaseSettings):
 
     LOGIN_MAX_ATTEMPTS: int = 5
     LOGIN_LOCKOUT_MINUTES: int = 15
+
+    VERCEL_DEPLOY_HOOK: Optional[str] = None
 
     ADMIN_EMAIL: EmailStr
     ADMIN_PASSWORD: str = Field(..., min_length=8, max_length=72)

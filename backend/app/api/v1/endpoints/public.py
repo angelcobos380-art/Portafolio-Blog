@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlmodel import Session, select
 
-from app.core.database import Post, get_session
+from app.core.database import Post, Project, get_session
 from app.schemas.post import PostResponse, PostStatus
+from app.schemas.project import ProjectResponse, ProjectStatus
 
 router = APIRouter(prefix="/public", tags=["Public"])
 
@@ -43,3 +44,9 @@ def get_public_post_by_slug(slug: str, session: Session = Depends(get_session)):
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Publicación no encontrada o no disponible públicamente.")
     return post
+
+
+@router.get("/projects", response_model=List[ProjectResponse])
+def list_public_projects(session: Session = Depends(get_session)):
+    projects = session.exec(select(Project).where(Project.status == ProjectStatus.PUBLICADO.value)).all()
+    return sorted(projects, key=lambda p: (not p.is_featured, p.sort_order))

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Posts — CMS Admin{% endblock %}
+{% block content %}
+<div class="row">
+  <h1>Posts</h1>
+  <a class="btn" href="/admin/posts/new">Nuevo post</a>
+</div>
+<div class="panel">
+  <table>
+    <tr><th>Título</th><th>Slug</th><th>Estado</th><th>Acciones</th></tr>
+    {% for p in posts %}
+    <tr>
+      <td>{{ p.title }}</td>
+      <td>{{ p.slug }}</td>
+      <td><span class="badge {{ p.status }}">{{ p.status }}</span></td>
+      <td>
+        {% if p.status in ['BORRADOR', 'DESPUBLICADO'] %}
+        <a class="btn ghost" href="/admin/posts/{{ p.post_id }}/edit">Editar</a>
+        {% endif %}
+        {% if p.status == 'BORRADOR' %}
+        <form class="inline" method="post" action="/admin/posts/{{ p.post_id }}/publish"><button type="submit">Publicar</button></form>
+        {% endif %}
+        {% if p.status == 'PUBLICADO' %}
+        <form class="inline" method="post" action="/admin/posts/{{ p.post_id }}/unpublish"><button class="ghost" type="submit">Despublicar</button></form>
+        {% endif %}
+        {% if p.status in ['PUBLICADO', 'DESPUBLICADO'] %}
+        <form class="inline" method="post" action="/admin/posts/{{ p.post_id }}/archive"><button class="ghost" type="submit">Archivar</button></form>
+        {% endif %}
+        {% if p.status == 'BORRADOR' %}
+        <form class="inline" method="post" action="/admin/posts/{{ p.post_id }}/delete"><button class="danger" type="submit">Borrar</button></form>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No hay posts.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

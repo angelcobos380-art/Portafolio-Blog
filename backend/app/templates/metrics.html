@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Métricas — CMS Admin{% endblock %}
+{% block content %}
+<h1>Métricas</h1>
+<div class="grid">
+  <div class="stat"><strong>{{ total_post_views }}</strong><br><span>Vistas posts</span></div>
+  <div class="stat"><strong>{{ total_project_views }}</strong><br><span>Vistas proyectos</span></div>
+</div>
+<div class="panel">
+  <h2>Posts</h2>
+  <table>
+    <tr><th>Título</th><th>Slug</th><th>Vistas</th></tr>
+    {% for p in posts %}
+    <tr><td>{{ p.title }}</td><td>{{ p.slug }}</td><td>{{ p.views }}</td></tr>
+    {% else %}
+    <tr><td colspan="3">Sin datos.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+<div class="panel">
+  <h2>Proyectos</h2>
+  <table>
+    <tr><th>Título</th><th>Slug</th><th>Vistas</th></tr>
+    {% for pr in projects %}
+    <tr><td>{{ pr.title }}</td><td>{{ pr.slug }}</td><td>{{ pr.views }}</td></tr>
+    {% else %}
+    <tr><td colspan="3">Sin datos.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

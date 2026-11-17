@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Post — CMS Admin{% endblock %}
+{% block content %}
+<h1>{{ 'Editar post' if form.get('post_id') else 'Nuevo post' }}</h1>
+<div class="panel">
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" action="{{ action }}">
+    <label>Título</label>
+    <input type="text" name="title" value="{{ form.get('title','') }}" required>
+    <label>Contenido (Markdown)</label>
+    <textarea name="content" rows="14" required>{{ form.get('content','') }}</textarea>
+    <label>Categoría</label>
+    <select name="category_id" required>
+      {% for c in categories %}
+      <option value="{{ c.category_id }}" {% if form.get('category_id') == c.category_id %}selected{% endif %}>{{ c.name }}</option>
+      {% endfor %}
+    </select>
+    <label>Tags (separados por coma)</label>
+    <input type="text" name="tags" value="{{ form.get('tags','') }}">
+    <div style="margin-top:1rem">
+      <button type="submit">Guardar</button>
+      <a class="btn ghost" href="/admin/posts">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

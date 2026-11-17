@@ -163,3 +163,7 @@ a { color: inherit; }
 .copy-email.is-copied { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
 @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } .contact-card { min-height: 0; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 1rem; } .contact-text { margin-top: 0; } .contact-handle { flex-basis: 100%; margin-top: 0; } }
 @media (max-width: 640px) { .sidebar-nav a:nth-child(3) { display: none; } }
+
+/* CMS integration */
+a.post-card { text-decoration: none; color: inherit; }
+.empty-state { grid-column: 1 / -1; color: var(--muted); }

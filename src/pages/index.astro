@@ -14,7 +14,7 @@ const projects = (await getPublicProjects()).map((project) => ({
 const posts = (await getPublicPosts()).map((post) => ({
   title: post.title,
   slug: post.slug,
-  summary: excerpt(post.content, 160),
+  summary: post.excerpt?.trim() || 'Leer artículo completo.',
   tags: post.tags,
 }));
 

@@ -1,33 +1,61 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getPublicPosts, renderMarkdown } from '../../lib/cms';
+import {
+  getPostBySlug,
+  getPublicPosts,
+  renderMarkdown,
+  tokensToCssVars,
+  type PublicPostDetail,
+} from '../../lib/cms';
 
 export async function getStaticPaths() {
   const posts = await getPublicPosts();
-  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+  const detailed = await Promise.all(posts.map((item) => getPostBySlug(item.slug)));
+  return detailed
+    .filter((post): post is PublicPostDetail => post !== null)
+    .map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
 }
 
 const { post } = Astro.props;
-const html = renderMarkdown(post.content);
+const html = post.content_html || renderMarkdown(post.content ?? '');
+const templateStyle = tokensToCssVars(post.template?.tokens);
+const headerStyle = post.template?.tokens?.layout?.headerStyle ?? 'minimal';
+const pageTitle = post.seo?.title || `${post.title} — Angel Marco`;
+const pageDescription = post.seo?.description || post.excerpt || post.title;
+const pageOgImage = post.seo?.og_image || post.cover_image_url || undefined;
+
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 ---
 
-<Layout title={`${post.title} — Angel Marco`} description={post.title}>
-  <div class="post-detail">
+<Layout title={pageTitle} description={pageDescription} ogImage={pageOgImage}>
+  <div class="post-detail" style={templateStyle || undefined}>
     <header class="topbar" aria-label="Encabezado">
       <p>Blog / {post.slug}</p>
     </header>
 
-    <article class="post-article">
-      <p class="eyebrow">Blog</p>
-      <h1>{post.title}</h1>
+    <article class={`post-article post-article--${headerStyle}`} data-has-template={Boolean(post.template)}>
+      <header class="post-header">
+        <p class="eyebrow">Blog</p>
+        <h1>{post.title}</h1>
 
-      {post.tags.length > 0 && (
-        <ul class="tags" aria-label="Etiquetas">
-          {post.tags.map((tag) => <li>{tag}</li>)}
-        </ul>
+        {post.excerpt && <p class="post-excerpt">{post.excerpt}</p>}
+
+        {post.tags.length > 0 && (
+          <ul class="tags" aria-label="Etiquetas">
+            {post.tags.map((tag) => <li>{tag}</li>)}
+          </ul>
+        )}
+      </header>
+
+      {post.cover_image_url && (
+        <figure class="post-cover">
+          <img src={post.cover_image_url} alt={post.title} loading="eager" />
+        </figure>
       )}
 
       <div class="post-body" set:html={html} />
@@ -46,71 +74,188 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 <style>
   .post-detail {
-    width: min(780px, 100%);
+    width: min(var(--cms-max-width, 780px), 100%);
     margin: 0 auto;
     padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 5vw, 5rem);
   }
 
+  .post-article {
+    font-family: var(--cms-body-font, inherit);
+    color: var(--cms-text, var(--text));
+  }
+
+  .post-article--editorial-centered .post-header {
+    text-align: center;
+  }
+
+  .post-article--editorial-centered .tags {
+    justify-content: center;
+  }
+
   .post-article h1 {
-    max-width: 18ch;
-    margin: .6rem 0 1.5rem;
-    font-size: clamp(2.4rem, 6vw, 4.2rem);
-    line-height: .98;
-    letter-spacing: -.07em;
+    max-width: 22ch;
+    margin: .6rem 0 1.25rem;
+    font-family: var(--cms-heading-font, inherit);
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+    line-height: 1.02;
+    letter-spacing: -.05em;
+    color: var(--cms-text, var(--text));
+  }
+
+  .post-article--editorial-centered h1 {
+    margin-inline: auto;
+  }
+
+  .post-excerpt {
+    margin: 0 0 1.25rem;
+    color: var(--cms-text-muted, var(--muted));
+    font-size: 1.08rem;
+    line-height: 1.65;
+  }
+
+  .post-cover {
+    margin: 2rem 0;
+  }
+
+  .post-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--cms-image-radius, 12px);
+    border: 1px solid var(--cms-border, var(--line));
   }
 
   .post-body {
     margin-top: 2rem;
-    color: var(--text);
-    font-size: 1.05rem;
-    line-height: 1.8;
+    color: var(--cms-text, var(--text));
+    font-size: var(--cms-base-size, 1.05rem);
+    line-height: var(--cms-line-height, 1.8);
   }
 
   .post-body :global(h2),
   .post-body :global(h3) {
-    margin: 2rem 0 .8rem;
+    margin: 2.2rem 0 .85rem;
+    font-family: var(--cms-heading-font, inherit);
+    color: var(--cms-text, var(--text));
     letter-spacing: -.03em;
   }
 
   .post-body :global(p) {
     margin: 0 0 1.25rem;
-    color: var(--muted);
+    color: var(--cms-text-muted, var(--muted));
   }
 
   .post-body :global(a) {
-    color: var(--accent);
+    color: var(--cms-link, var(--accent));
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .post-body :global(pre) {
-    padding: 1rem;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, .3);
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--cms-border, var(--line));
+    border-radius: var(--cms-code-radius, 12px);
+    background: var(--cms-code-bg, rgba(0, 0, 0, .35));
     overflow-x: auto;
+    margin: 1.5rem 0;
   }
 
   .post-body :global(code) {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--cms-code-font, ui-monospace, SFMono-Regular, Menlo, monospace);
     font-size: .9em;
   }
 
   .post-body :global(ul),
   .post-body :global(ol) {
-    color: var(--muted);
+    color: var(--cms-text-muted, var(--muted));
     padding-left: 1.4rem;
+    margin: 0 0 1.25rem;
   }
 
   .post-body :global(blockquote) {
-    margin: 0 0 1.25rem;
-    padding-left: 1rem;
-    border-left: 3px solid var(--accent);
-    color: var(--muted);
+    margin: 1.5rem 0;
+    padding: .25rem 0 .25rem 1.1rem;
+    border-left: 3px solid var(--cms-quote-border, var(--accent));
+    font-style: var(--cms-quote-style, italic);
+    color: var(--cms-text-muted, var(--muted));
+  }
+
+  .post-body :global(figure) {
+    margin: 1.75rem 0;
+  }
+
+  .post-body :global(figure img),
+  .post-body :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--cms-image-radius, 12px);
+  }
+
+  .post-body :global(figcaption) {
+    margin-top: .6rem;
+    font-size: .85rem;
+    color: var(--cms-text-muted, var(--muted));
+    text-align: center;
+  }
+
+  .post-body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: .95rem;
+  }
+
+  .post-body :global(th),
+  .post-body :global(td) {
+    padding: .65rem .85rem;
+    border: 1px solid var(--cms-border, var(--line));
+    text-align: left;
+  }
+
+  .post-body :global(th) {
+    background: var(--cms-surface, rgba(255, 255, 255, .04));
+    color: var(--cms-text, var(--text));
+  }
+
+  .post-body :global(.callout) {
+    margin: 1.5rem 0;
+    padding: 1rem 1.15rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--cms-accent, var(--accent));
+    background: var(--cms-surface, rgba(255, 255, 255, .04));
+  }
+
+  .post-body :global(.callout-info) {
+    background: var(--cms-callout-info-bg, rgba(56, 189, 248, .12));
+    border-left-color: var(--cms-callout-info-border, #38bdf8);
+  }
+
+  .post-body :global(.callout-tip) {
+    background: var(--cms-callout-tip-bg, rgba(34, 197, 94, .12));
+    border-left-color: var(--cms-callout-tip-border, #22c55e);
+  }
+
+  .post-body :global(.callout-warning) {
+    background: var(--cms-callout-warning-bg, rgba(234, 179, 8, .12));
+    border-left-color: var(--cms-callout-warning-border, #eab308);
+  }
+
+  .post-body :global(.callout-danger) {
+    background: var(--cms-callout-danger-bg, rgba(227, 75, 78, .14));
+    border-left-color: var(--cms-callout-danger-border, #e34b4e);
+  }
+
+  .post-body :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--cms-border, var(--line));
+    margin: 2rem 0;
   }
 
   .post-back {
     display: inline-block;
     margin-top: 2.5rem;
-    color: var(--accent);
+    color: var(--cms-accent, var(--accent));
     font-weight: 700;
     text-decoration: none;
   }
